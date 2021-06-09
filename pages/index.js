@@ -5,13 +5,13 @@ import calculateApy from '../apy.js';
 
 export default function Home({ apys }) {
   const formatPercent = number =>
-  `${new Number(number).toFixed(2)}%`
+    `${new Number(number).toFixed(2)}%`
   
   return (
     <div className='container'>
       <Head>
         <title>Compound dashboard</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
 
       <div className='row mt-4'>
@@ -33,13 +33,13 @@ export default function Home({ apys }) {
           </tr>
         </thead>
         <tbody>
-          {apys && apys.map(apy => {
+          {apys && apys.map(apy => (
             <tr key={apy.ticker}>
               <td>
-              <img
-                src={`img/${apy.ticker.toLowerCase()}.png`}
-                style={{width: 25, height: 25, marginRight: 10}}
-              />
+                <img
+                  src={`img/${apy.ticker.toLowerCase()}.png`}
+                  style={{width: 25, height: 25, marginRight: 10}}
+                />
                 {apy.ticker.toUpperCase()}
               </td>
               <td>
@@ -51,9 +51,8 @@ export default function Home({ apys }) {
               <td>
                 {formatPercent(parseFloat(apy.supplyApy) + parseFloat(apy.compApy))}
               </td>
-
             </tr>
-          })}
+          ))}
         </tbody>
       </table>
     </div>
@@ -62,9 +61,14 @@ export default function Home({ apys }) {
 
 export async function getServerSideProps(context) {
   const apys = await Promise.all([
+    calculateApy(Compound.cETH, 'ETH'),
+    calculateApy(Compound.cCOMP, 'COMP'),
     calculateApy(Compound.cDAI, 'DAI'),
     calculateApy(Compound.cUSDC, 'USDC'),
     calculateApy(Compound.cUSDT, 'USDT'),
+    calculateApy(Compound.cBAT, 'BAT'),
+    calculateApy(Compound.cUNI, 'UNI'),
+    calculateApy(Compound.cLINK, 'LINK'),
   ]);
 
   return {
